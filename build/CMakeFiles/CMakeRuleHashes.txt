@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+4b529f57d1a922546f4b2a3cd3a1487f CMakeFiles/securechat_autogen
+dbbde061f89af615d8516a0ea07bcf18 securechat_autogen/timestamp

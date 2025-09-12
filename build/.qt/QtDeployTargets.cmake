@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_securechat_FILE /Users/vedantshinde/secure-chat/build/securechat)
+set(__QT_DEPLOY_TARGET_securechat_TYPE EXECUTABLE)

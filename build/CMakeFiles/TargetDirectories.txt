@@ -1,0 +1,5 @@
+/Users/vedantshinde/secure-chat/build/CMakeFiles/securechat.dir
+/Users/vedantshinde/secure-chat/build/CMakeFiles/edit_cache.dir
+/Users/vedantshinde/secure-chat/build/CMakeFiles/rebuild_cache.dir
+/Users/vedantshinde/secure-chat/build/CMakeFiles/securechat_autogen_timestamp_deps.dir
+/Users/vedantshinde/secure-chat/build/CMakeFiles/securechat_autogen.dir

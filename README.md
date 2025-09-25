@@ -1,180 +1,110 @@
-# SecureChat
 
-## Overview
+SecureChat
 
-This project provides a **Secure Chat** application. It includes components for encryption, message handling, and possibly frontend/backend modules. Below you'll find project structure, setup instructions, and usage guidelines.
+SecureChat is a C++ based peer-to-peer encrypted chat application built using Qt, CMake, and Crypto++.
+It demonstrates real-time secure messaging between two instances over sockets.
 
-## Project Structure
+🚀 Features
 
-```
-SecureChat/
-└── secure-chat
-    ├── .git
-    │   ├── HEAD
-    │   ├── config
-    │   ├── description
-    │   ├── hooks
-    │   │   ├── applypatch-msg.sample
-    │   │   ├── commit-msg.sample
-    │   │   ├── fsmonitor-watchman.sample
-    │   │   ├── post-update.sample
-    │   │   ├── pre-applypatch.sample
-    │   │   ├── pre-commit.sample
-    │   │   ├── pre-merge-commit.sample
-    │   │   ├── pre-push.sample
-    │   │   ├── pre-rebase.sample
-    │   │   ├── pre-receive.sample
-    │   │   ├── prepare-commit-msg.sample
-    │   │   ├── push-to-checkout.sample
-    │   │   ├── sendemail-validate.sample
-    │   │   └── update.sample
-    │   ├── info
-    │   │   └── exclude
-    │   ├── objects
-    │   │   ├── info
-    │   │   └── pack
-    │   └── refs
-    │       ├── heads
-    │       └── tags
-    ├── CMakeLists.txt
-    ├── build
-    │   ├── .qt
-    │   │   ├── QtDeploySupport.cmake
-    │   │   └── QtDeployTargets.cmake
-    │   ├── CMakeCache.txt
-    │   ├── CMakeFiles
-    │   │   ├── 4.1.1
-    │   │   │   ├── CMakeCXXCompiler.cmake
-    │   │   │   ├── CMakeDetermineCompilerABI_CXX.bin
-    │   │   │   ├── CMakeSystem.cmake
-    │   │   │   └── CompilerIdCXX
-    │   │   │       ├── CMakeCXXCompilerId.cpp
-    │   │   │       ├── a.out
-    │   │   │       ├── apple-sdk.cpp
-    │   │   │       └── tmp
-    │   │   ├── CMakeConfigureLog.yaml
-    │   │   ├── CMakeDirectoryInformation.cmake
-    │   │   ├── CMakeRuleHashes.txt
-    │   │   ├── CMakeScratch
-    │   │   ├── InstallScripts.json
-    │   │   ├── Makefile.cmake
-    │   │   ├── Makefile2
-    │   │   ├── TargetDirectories.txt
-    │   │   ├── cmake.check_cache
-    │   │   ├── pkgRedirects
-    │   │   ├── progress.marks
-    │   │   ├── securechat.dir
-    │   │   │   ├── DependInfo.cmake
-    │   │   │   ├── build.make
-    │   │   │   ├── cmake_clean.cmake
-    │   │   │   ├── compiler_depend.internal
-    │   │   │   ├── compiler_depend.make
-    │   │   │   ├── compiler_depend.ts
-    │   │   │   ├── depend.make
-    │   │   │   ├── flags.make
-    │   │   │   ├── link.txt
-    │   │   │   ├── progress.make
-    │   │   │   ├── securechat_autogen
-    │   │   │   │   ├── mocs_compilation.cpp.o
-    │   │   │   │   └── mocs_compilation.cpp.o.d
-    │   │   │   └── src
-    │   │   │       ├── CryptoHelper.cpp.o
-    │   │   │       ├── CryptoHelper.cpp.o.d
-    │   │   │       ├── MainWindow.cpp.o
-    │   │   │       ├── MainWindow.cpp.o.d
-    │   │   │       ├── main.cpp.o
-    │   │   │       └── main.cpp.o.d
-    │   │   ├── securechat_autogen.dir
-    │   │   │   ├── AutogenInfo.json
-    │   │   │   ├── AutogenUsed.txt
-    │   │   │   ├── DependInfo.cmake
-    │   │   │   ├── ParseCache.txt
-    │   │   │   ├── build.make
-    │   │   │   ├── cmake_clean.cmake
-    │   │   │   ├── compiler_depend.internal
-    │   │   │   ├── compiler_depend.make
-    │   │   │   ├── compiler_depend.ts
-    │   │   │   └── progress.make
-    │   │   └── securechat_autogen_timestamp_deps.dir
-    │   │       ├── DependInfo.cmake
-    │   │       ├── build.make
-    │   │       ├── cmake_clean.cmake
-    │   │       ├── compiler_depend.make
-    │   │       ├── compiler_depend.ts
-    │   │       └── progress.make
-    │   ├── Makefile
-    │   ├── cmake_install.cmake
-    │   ├── securechat
-    │   └── securechat_autogen
-    │       ├── UVLADIE3JM
-    │       │   ├── moc_MainWindow.cpp
-    │       │   └── moc_MainWindow.cpp.d
-    │       ├── deps
-    │       ├── include
-    │       ├── moc_predefs.h
-    │       ├── mocs_compilation.cpp
-    │       └── timestamp
-    ├── config.json
-    ├── instances
-    │   ├── instanceA
-    │   │   ├── CMakeLists.txt
-    │   │   ├── chat.log
-    │   │   ├── config.json
-    │   │   ├── config.json.tmp
-    │   │   ├── keys
-    │   │   │   ├── my_private.key
-    │   │   │   ├── my_public.key
-    │   │   │   └── peer_public.key
-    │   │   ├── runA.log
-    │   │   ├── runA.pid
-    │   │   └── src
-    │   │       ├── CryptoHelper.cpp
-    │   │       ├── CryptoHelper.h
-    │   │       ├── KeyGen.cpp
-    │   │       ├── MainWindow.cpp
-    │   │       ├── MainWindow.h
-    │   │       └── main.cpp
-    │   └── instanceB
-    │       ├── CMakeLists.txt
-    │       ├── chat.log
-    │       ├── config.json
-    │       ├── keys
-    │       │   ├── my_private.key
-    │       │   ├── my_public.key
-    │       │   └── peer_public.key
-    │       ├── runB.log
-    │       ├── runB.pid
-    │       └── src
-    │           ├── CryptoHelper.cpp
-    │           ├── CryptoHelper.h
-    │           ├── KeyGen.cpp
-    │           ├── MainWindow.cpp
-    │           ├── MainWindow.h
-    │           └── main.cpp
-    ├── keys
-    └── src
-        ├── CryptoHelper.cpp
-        ├── CryptoHelper.h
-        ├── KeyGen.cpp
-        ├── MainWindow.cpp
-        ├── MainWindow.h
-        └── main.cpp
-```
+End-to-end encryption using Crypto++
 
-## Setup Instructions
+Peer-to-peer messaging with sockets
 
-### C++ / Qt
+Cross-platform (Linux / macOS; portable to Windows)
 
-Use CMake or qmake depending on provided files.
+Two terminal instances (Server & Client) simulate chatting
 
-## Usage
+Modular design with CryptoHelper and networking components
 
-- Start the backend server as per setup instructions.
-- If there's a frontend, run it separately (often in a `client/` folder).
-- Access the app in your browser or via CLI depending on implementation.
+📂 Project Structure
+secure-chat/
+│── CMakeLists.txt         # Build configuration
+│── run.sh                 # Helper script to build & run
+│── src/                   # Source code
+│   ├── main.cpp
+│   ├── CryptoHelper.cpp
+│   └── ...
+│── instances/             # Separate folders for chat instances
+│   ├── instanceA/
+│   └── instanceB/
+│── build/                 # Build output (created automatically)
 
-## Troubleshooting
+⚙️ Installation
+1. Install Dependencies (macOS)
+brew install cmake qt cryptopp
 
-- Ensure Node.js or Python version matches project requirements.
-- If port conflicts occur, update the `PORT` variable in `.env`.
-- For dependency errors, delete `node_modules` or `.venv` and reinstall.
+2. Clone Repository
+git clone <repo-link>
+cd secure-chat
+
+3. Build the Project
+chmod +x run.sh
+./run.sh
+
+
+This will:
+
+Build the project with CMake
+
+Launch two terminal windows (Instance A and Instance B)
+
+💻 Usage
+
+Instance A (Server)
+
+Starts listening on a port (9001 by default)
+
+Shows:
+
+System Listening on 0.0.0.0:9001
+
+
+Instance B (Client)
+
+Connects to the server (127.0.0.1:9001)
+
+Shows:
+
+System Connecting to 127.0.0.1:9001
+System Socket connected
+
+
+Start Chatting
+
+Type messages directly in the SecureChat terminal windows (not the normal shell prompt).
+
+Example:
+
+Hello from Server
+
+
+→ Appears in the Client window.
+
+Hi, this is Client
+
+
+→ Appears in the Server window.
+
+🎥 Demo Workflow
+
+Run ./run.sh
+
+Two terminal windows will open (Instance A = Server, Instance B = Client).
+
+Type messages in one, see them appear in the other.
+
+All communication is encrypted using Crypto++.
+
+🔮 Future Improvements
+
+GUI interface (Qt Widgets / QML)
+
+Group chat (multiple clients)
+
+File transfer support
+
+Stronger encryption algorithms
+
+👨‍💻 Author
+
+Developed as part of Cyber Security Project (July–Dec 2025).

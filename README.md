@@ -1,110 +1,155 @@
+# 🔐 Secure Chat
 
-SecureChat
+A simple encrypted peer-to-peer chat application built using **C++**, **Qt**, and **OpenSSL**.
+It allows two instances to exchange messages securely over TCP using asymmetric (RSA) and symmetric (AES) encryption.
 
-SecureChat is a C++ based peer-to-peer encrypted chat application built using Qt, CMake, and Crypto++.
-It demonstrates real-time secure messaging between two instances over sockets.
+---
 
-🚀 Features
+## 🧩 Features
 
-End-to-end encryption using Crypto++
+* Peer-to-peer encrypted messaging
+* RSA public/private key pair for identity
+* AES session encryption for chat
+* Configurable host, port, and peer settings (`config.json`)
+* Works locally (e.g., 127.0.0.1) or over LAN
 
-Peer-to-peer messaging with sockets
+---
 
-Cross-platform (Linux / macOS; portable to Windows)
+## ⚙️ Requirements
 
-Two terminal instances (Server & Client) simulate chatting
+Make sure the following packages are installed on your Linux system:
 
-Modular design with CryptoHelper and networking components
+```bash
+sudo apt update
+sudo apt install -y build-essential cmake qt6-base-dev libssl-dev
+```
 
-📂 Project Structure
-secure-chat/
-│── CMakeLists.txt         # Build configuration
-│── run.sh                 # Helper script to build & run
-│── src/                   # Source code
-│   ├── main.cpp
-│   ├── CryptoHelper.cpp
-│   └── ...
-│── instances/             # Separate folders for chat instances
-│   ├── instanceA/
-│   └── instanceB/
-│── build/                 # Build output (created automatically)
+---
 
-⚙️ Installation
-1. Install Dependencies (macOS)
-brew install cmake qt cryptopp
+## 🏗️ Build Instructions
 
-2. Clone Repository
-git clone <repo-link>
-cd secure-chat
+1. **Clone or extract the project**
 
-3. Build the Project
-chmod +x run.sh
-./run.sh
+   ```bash
+   cd ~/Downloads
+   unzip secure-chat.zip -d secure-chat
+   cd secure-chat
+   ```
 
+2. **Build the project**
 
-This will:
+   ```bash
+   rm -rf build
+   mkdir build
+   cd build
+   cmake ..
+   make -j$(nproc)
+   ```
 
-Build the project with CMake
+   ✅ You should see the binary `securechat` inside `build/`.
 
-Launch two terminal windows (Instance A and Instance B)
+---
 
-💻 Usage
+## 📁 Setup Runtime Instances
 
-Instance A (Server)
+Create two runtime folders to simulate two peers:
 
-Starts listening on a port (9001 by default)
+```bash
+cd build
+mkdir runA runB
+```
 
-Shows:
+Copy the keys and configuration files:
 
-System Listening on 0.0.0.0:9001
+```bash
+cp -r ../keys runA/
+cp -r ../keys runB/
+cp ../config.json runA/
+cp ../config.json runB/
+```
 
+> If the `keys/` folder doesn’t exist, generate it manually using OpenSSL (see below).
 
-Instance B (Client)
+---
 
-Connects to the server (127.0.0.1:9001)
+## 🔑 Generate Keys (if missing)
 
-Shows:
+Run these commands in the project root:
 
-System Connecting to 127.0.0.1:9001
-System Socket connected
+```bash
+mkdir -p keys
+openssl genrsa -out keys/my_private.key 2048
+openssl rsa -in keys/my_private.key -pubout -out keys/my_public.key
+```
 
+Then copy these keys to each run folder:
 
-Start Chatting
+```bash
+cp -r keys build/runA/
+cp -r keys build/runB/
+```
 
-Type messages directly in the SecureChat terminal windows (not the normal shell prompt).
+---
+
+## 🚀 Running Two Instances
+
+Run both peers from the `build` directory:
+
+```bash
+( cd runA && ./securechat ) &
+( cd runB && ./securechat ) &
+```
+
+Expected output:
+
+```
+[2025-10-08 19:42:12] System Connecting to 127.0.0.1:9002 ...
+[2025-10-08 19:42:12] System Socket connected
+```
+
+Each instance will have its own chat window.
+Type messages in one window — they’ll appear encrypted and delivered to the other.
+
+---
+
+## ⚙️ Configuration File (`config.json`)
 
 Example:
 
-Hello from Server
+```json
+{
+    "host": "127.0.0.1",
+    "port": 9001,
+    "peer_host": "127.0.0.1",
+    "peer_port": 9002,
+    "key_dir": "keys/"
+}
+```
 
+Each instance can have a different port number but must point to the other’s `peer_port`.
 
-→ Appears in the Client window.
+---
 
-Hi, this is Client
+## 🧠 Troubleshooting
 
+* **“No such file or directory: securechat”**
+  → Run `make` again inside `build/`.
 
-→ Appears in the Server window.
+* **“Error opening keys/peer_public.key”**
+  → Ensure each instance has a valid `keys/` folder with both `my_private.key` and `my_public.key`.
 
-🎥 Demo Workflow
+* **Qt not found**
+  → Install it: `sudo apt install qt6-base-dev`
 
-Run ./run.sh
+---
 
-Two terminal windows will open (Instance A = Server, Instance B = Client).
+## 📜 License
 
-Type messages in one, see them appear in the other.
+This project is provided for educational use.
+You are free to modify and distribute it with attribution.
 
-All communication is encrypted using Crypto++.
+---
 
-🔮 Future Improvements
-
-GUI interface (Qt Widgets / QML)
-
-Group chat (multiple clients)
-
-File transfer support
-
-Stronger encryption algorithms
-
-👨‍💻 Author
-
-Developed as part of Cyber Security Project (July–Dec 2025).
+**Author:** Original source modified for Linux execution guide by Pritam Kumar
+**Date:** October 2025
+Cyber Security Project (July–Dec 2025).
